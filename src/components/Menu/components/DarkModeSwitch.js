@@ -55,6 +55,7 @@ export default function DarkModeSwitch() {
       <input
         id="darkmode"
         type="checkbox"
+        defaultChecked={contexto.mode === "dark"}
         onChange={() => {
           console.log('Mudou o state')
           contexto.toggleMode()
