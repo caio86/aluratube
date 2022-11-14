@@ -33,7 +33,7 @@ const supabase = createClient(PROJECT_URL, PUBLIC_KEY)
 
 export default function RegisterVideo() {
   const formCadastro = useForm({
-    initialValues: { titulo: "FrostPunk", url: "https://www.youtube.com/watch?v=QsqatJxAUtk" },
+    initialValues: { titulo: "FrostPunk", url: "https://www.youtube.com/watch?v=QsqatJxAUtk" , playlist: "jogos"},
   })
   const [formVisivel, setFormVisivel] = React.useState(false)
   /*
@@ -64,7 +64,7 @@ export default function RegisterVideo() {
                 title: formCadastro.values.titulo,
                 url: formCadastro.values.url,
                 thumb: getThumbnail(formCadastro.values.url),
-                playlist: "jogos",
+                playlist: formCadastro.values.playlist,
               })
               .then(oqueveio => {
                 console.log(oqueveio)
@@ -83,6 +83,7 @@ export default function RegisterVideo() {
             </button>
             <input placeholder="Título do vídeo" name="titulo" value={formCadastro.values.titulo} onChange={formCadastro.handleChange} />
             <input placeholder="URL" name="url" value={formCadastro.values.url} onChange={formCadastro.handleChange} />
+            <input placeholder="Playlist" name="playlist" value={formCadastro.values.playlist} onChange={formCadastro.handleChange} />
             <button type="submit">Cadastrar</button>
           </div>
         </form>
