@@ -1,5 +1,7 @@
 import React from 'react'
 import { StyledRegisterVideo } from './styles'
+import { db } from '/src/firebaseInit'
+import { collection, addDoc } from 'firebase/firestore'
 
 // WhiteBoarding
 // Custom Hook
@@ -19,6 +21,11 @@ function useForm(propsDoForm) {
       setValues({})
     }
   }
+}
+
+// get youtube thumbnail from video url
+function getThumbnail(url) {
+  return `https://img.youtube.com/vi/${url.split("v=")[1]}/hqdefault.jpg`;
 }
 
 export default function RegisterVideo() {
@@ -46,6 +53,20 @@ export default function RegisterVideo() {
           onSubmit={e => {
             e.preventDefault()
             console.log(formCadastro.values)
+
+            const videosCollection = collection(db, "videos")
+            const docRef = addDoc(videosCollection, {
+              title: formCadastro.values.titulo,
+              url: formCadastro.values.url,
+              thumb: getThumbnail(formCadastro.values.url),
+              playlist: "jogos"
+            }).then((oqueVeio) => {
+                console.log("Sucesso: ", oqueVeio)
+                console.log(docRef)
+            }).catch((err) => {
+              console.log("Erro: ", err)
+            })
+
             setFormVisivel(false)
             formCadastro.clearForm()
           }}

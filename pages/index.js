@@ -1,29 +1,45 @@
-import React from 'react'
-import config from '../config.json'
-import styled from 'styled-components'
-import Menu from '../src/components/Menu'
-import { StyledTimeline } from '../src/components/Timeline'
+import React from "react"
+import config from "../config.json"
+import styled from "styled-components"
+import Menu from "../src/components/Menu"
+import { StyledTimeline } from "../src/components/Timeline"
+import { db } from "/src/firebaseInit"
+import { collection, getDocs } from "firebase/firestore"
 
 function HomePage() {
-  const [valorDoFiltro, setValorDoFiltro] = React.useState('')
+  const [valorDoFiltro, setValorDoFiltro] = React.useState("")
+  const [playlists, setPlaylists] = React.useState({})
+
+  React.useEffect(() => {
+    console.log("useEffect")
+    getDocs(collection(db, "videos"))
+    .then((data) => {
+      const novaPlaylists = {...playlists}
+      data.docs.forEach((video) => {
+        if(!novaPlaylists[video.data().playlist]) novaPlaylists[video.data().playlist] = []
+        novaPlaylists[video.data().playlist] = [
+          video.data(),
+          ...novaPlaylists[video.data().playlist]
+        ]
+      })
+      setPlaylists(novaPlaylists)
+    })
+  }, [])
 
   return (
     <>
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
           // backgroundColor: 'red'
         }}
       >
         {/* Prop Drilling */}
-        <Menu
-          valorDoFiltro={valorDoFiltro}
-          setValorDoFiltro={setValorDoFiltro}
-        />
+        <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
         <Header />
-        <Timeline searchValue={valorDoFiltro} playlists={config.playlists}>
+        <Timeline searchValue={valorDoFiltro} playlists={playlists}>
           Conteúdo
         </Timeline>
       </div>
@@ -49,7 +65,7 @@ const StyledHeader = styled.div`
   }
 `
 const StyledBanner = styled.div`
-  background-image: url(${({ bg }) => bg });
+  background-image: url(${({ bg }) => bg});
   background-size: cover;
   height: 230px;
 `
@@ -74,19 +90,19 @@ function Timeline({ searchValue, ...propriedades }) {
 
   return (
     <StyledTimeline>
-      {playlistNames.map(playlistName => {
+      {playlistNames.map((playlistName) => {
         const videos = propriedades.playlists[playlistName]
         return (
           <section key={playlistName}>
             <h2>{playlistName}</h2>
             <div>
               {videos
-                .filter(video => {
+                .filter((video) => {
                   const titleNormalized = video.title.toLowerCase()
                   const searchValueNormalized = searchValue.toLowerCase()
                   return titleNormalized.includes(searchValueNormalized)
                 })
-                .map(video => {
+                .map((video) => {
                   return (
                     <a key={video.url} href={video.url}>
                       <img src={video.thumb} />
