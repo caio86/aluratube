@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
+import Router from "next/router"
 import React from "react"
 import { StyledRegisterVideo } from "./styles"
 
@@ -75,6 +76,7 @@ export default function RegisterVideo() {
 
             setFormVisivel(false)
             formCadastro.clearForm()
+            Router.reload()
           }}
         >
           <div>
