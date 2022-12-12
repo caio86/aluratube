@@ -12,15 +12,11 @@ function HomePage() {
 
   React.useEffect(() => {
     console.log("useEffect")
-    getDocs(collection(db, "videos"))
-    .then((data) => {
-      const novaPlaylists = {...playlists}
+    getDocs(collection(db, "videos")).then((data) => {
+      const novaPlaylists = { ...playlists }
       data.docs.forEach((video) => {
-        if(!novaPlaylists[video.data().playlist]) novaPlaylists[video.data().playlist] = []
-        novaPlaylists[video.data().playlist] = [
-          video.data(),
-          ...novaPlaylists[video.data().playlist]
-        ]
+        if (!novaPlaylists[video.data().playlist]) novaPlaylists[video.data().playlist] = []
+        novaPlaylists[video.data().playlist].push(video.data())
       })
       setPlaylists(novaPlaylists)
     })

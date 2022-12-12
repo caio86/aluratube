@@ -1,7 +1,7 @@
-import React from 'react'
-import { StyledRegisterVideo } from './styles'
-import { db } from '/src/firebaseInit'
-import { collection, addDoc } from 'firebase/firestore'
+import React from "react"
+import { StyledRegisterVideo } from "./styles"
+import { db } from "/src/firebaseInit"
+import { collection, addDoc } from "firebase/firestore"
 
 // WhiteBoarding
 // Custom Hook
@@ -9,28 +9,28 @@ function useForm(propsDoForm) {
   const [values, setValues] = React.useState(propsDoForm.initialValues)
   return {
     values,
-    handleChange: e => {
+    handleChange: (e) => {
       const value = e.target.value
       const name = e.target.name
       setValues({
         ...values,
-        [name]: value
+        [name]: value,
       })
     },
     clearForm() {
       setValues({})
-    }
+    },
   }
 }
 
 // get youtube thumbnail from video url
 function getThumbnail(url) {
-  return `https://img.youtube.com/vi/${url.split("v=")[1]}/hqdefault.jpg`;
+  return `https://img.youtube.com/vi/${url.split("v=")[1]}/hqdefault.jpg`
 }
 
 export default function RegisterVideo() {
   const formCadastro = useForm({
-    initialValues: { titulo: '', url: '' }
+    initialValues: { titulo: "", url: "", playlist: "" },
   })
   const [formVisivel, setFormVisivel] = React.useState(false)
   /*
@@ -50,7 +50,7 @@ export default function RegisterVideo() {
       {/* Operadores de Curto circuito */}
       {formVisivel ? (
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault()
             console.log(formCadastro.values)
 
@@ -59,38 +59,27 @@ export default function RegisterVideo() {
               title: formCadastro.values.titulo,
               url: formCadastro.values.url,
               thumb: getThumbnail(formCadastro.values.url),
-              playlist: "jogos"
-            }).then((oqueVeio) => {
+              playlist: formCadastro.values.playlist,
+            })
+              .then((oqueVeio) => {
                 console.log("Sucesso: ", oqueVeio)
                 console.log(docRef)
-            }).catch((err) => {
-              console.log("Erro: ", err)
-            })
+              })
+              .catch((err) => {
+                console.log("Erro: ", err)
+              })
 
             setFormVisivel(false)
             formCadastro.clearForm()
           }}
         >
           <div>
-            <button
-              type="button"
-              className="close-modal"
-              onClick={() => setFormVisivel(false)}
-            >
+            <button type="button" className="close-modal" onClick={() => setFormVisivel(false)}>
               X
             </button>
-            <input
-              placeholder="Título do vídeo"
-              name="titulo"
-              value={formCadastro.values.titulo}
-              onChange={formCadastro.handleChange}
-            />
-            <input
-              placeholder="URL"
-              name="url"
-              value={formCadastro.values.url}
-              onChange={formCadastro.handleChange}
-            />
+            <input placeholder="Título do vídeo" name="titulo" value={formCadastro.values.titulo} onChange={formCadastro.handleChange} />
+            <input placeholder="URL" name="url" value={formCadastro.values.url} onChange={formCadastro.handleChange} />
+            <input placeholder="Playlist" name="playlist" value={formCadastro.values.playlist} onChange={formCadastro.handleChange} />
             <button type="submit">Cadastrar</button>
           </div>
         </form>
