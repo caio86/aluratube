@@ -1,4 +1,5 @@
 import React from "react"
+import { useRouter } from "next/router"
 import { StyledRegisterVideo } from "./styles"
 import { db } from "/src/firebaseInit"
 import { collection, addDoc } from "firebase/firestore"
@@ -33,6 +34,7 @@ export default function RegisterVideo() {
     initialValues: { titulo: "", url: "", playlist: "" },
   })
   const [formVisivel, setFormVisivel] = React.useState(false)
+  const router = useRouter()
   /*
   ## O que precisamos para o form funcionar?
   - pegar os dados,que precisam vir do state
@@ -64,6 +66,7 @@ export default function RegisterVideo() {
               .then((oqueVeio) => {
                 console.log("Sucesso: ", oqueVeio)
                 console.log(docRef)
+                router.reload()
               })
               .catch((err) => {
                 console.log("Erro: ", err)
